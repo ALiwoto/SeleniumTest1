@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System.Threading;
@@ -51,30 +50,55 @@ namespace SeleniumTest1
             var currentPageNum = 0;
             while (true)
             {
+                var currentPageQuestionIndex = 0;
                 currentPageNum++;
                 bool needsAnswer = false;
                 var cardTexts = driver.FindElements(By.ClassName("card-text"));
-                foreach (var currentCard in cardTexts)
+                var allQuestionOptions = driver.FindElements(By.ClassName("multi-choice-item"));
+                List<List<string>> questionsOptions = new();
+
+                foreach (var currentOption in allQuestionOptions)
                 {
+                    //var theLetter = currentOption.FindElement(
+                    //    By.ClassName("multi-choice-letter"))
+                    //    .GetAttribute("data-choice-letter").Trim();
+                    var currentTxt = currentOption.GetAttribute("innerText").Trim();
+
+                    if (currentTxt.StartsWith("A"))
+                        questionsOptions.Add(new() { currentTxt });
+                    else
+                        questionsOptions[^1].Add(currentTxt);
+                }
+
+                for (int i = 0; i < cardTexts.Count; i++)
+                {
+                    var currentCard = cardTexts[i];
                     var currentNodeName = currentCard.GetAttribute("nodeName");
                     if (string.Compare(currentNodeName, "p", true) == -1)
                         continue;
 
                     if (needsAnswer)
                     {
-                        totalStr.AppendLine($"{currentCard.GetAttribute("innerText")}");
+                        var answer = PurifyAnswer($"{currentCard.GetAttribute("innerText")}");
+                        totalStr.AppendLine($"Correct Answer: {answer}");
                     }
                     else
                     {
-                        totalStr.AppendLine($"{questionIndex}: {currentCard.GetAttribute("innerText")}");
+                        totalStr.AppendLine($"{questionIndex}: " +
+                            $"{currentCard.GetAttribute("innerText").Trim()}");
+
+                        foreach (var currentOption in questionsOptions[currentPageQuestionIndex])
+                            totalStr.AppendLine(currentOption);
+
                         questionIndex++;
+                        currentPageQuestionIndex++;
                     }
 
                     needsAnswer = !needsAnswer;
                 }
 
-                totalStr.AppendLine("Page 1");
-                totalStr.AppendLine("==================");
+                totalStr.AppendLine($"Page {currentPageNum}");
+                totalStr.AppendLine("=====================================");
 
                 IWebElement? nextButton = null;
                 try
@@ -131,13 +155,21 @@ namespace SeleniumTest1
                     Console.WriteLine(ex);
                 }
             }
-            
 
-            var ok = totalStr.ToString();
-            Console.WriteLine(ok);
+            return totalStr.ToString(); ;
+        }
+    
+        private static string PurifyAnswer(string value)
+        {
+            var result = "";
+            foreach (var currentChar in value)
+            {
+                if (char.IsLetter(currentChar))
+                    result += currentChar;
+            }
 
-
-            return ok;
+            result = result.ToLower().Replace("correct", "").Replace("answer", "");
+            return result.ToUpper();
         }
     }
 }

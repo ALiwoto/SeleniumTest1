@@ -41,8 +41,6 @@ name: .NET Core Desktop (windows)
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
 

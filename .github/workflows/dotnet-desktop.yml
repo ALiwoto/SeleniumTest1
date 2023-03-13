@@ -89,10 +89,6 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    # Remove the pfx
-    - name: Remove the pfx
-      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
-
     - name: Run the SeleniumTest
       run: SeleniumTest1\bin\Debug\net7.0\SeleniumTest1.exe
     

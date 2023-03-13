@@ -88,10 +88,13 @@ jobs:
         Configuration: ${{ matrix.configuration }}
 
     - name: Run the SeleniumTest
-      run: SeleniumTest1\bin\Debug\net7.0\SeleniumTest1.exe
+      run: SeleniumTest1\bin\Debug\net7.0\SeleniumTest1.exe 1
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
         name: Built
         path: SeleniumTest1\bin\Debug\net7.0\*.txt
+      env:
+        TARGET_USERNAME: ${ secrets.TARGET_USERNAME }
+        TARGET_PASSWORD: ${ secrets.TARGET_PASSWORD }

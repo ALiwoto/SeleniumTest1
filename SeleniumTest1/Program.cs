@@ -10,8 +10,13 @@ namespace SeleniumTest1
     {
         static void Main(string[] args)
         {
-            var output = Exam1.GetExamQuestionAndAnswers("https://www.examtopics.com/exams/vmware/5v0-61-22/");
-            File.WriteAllText("output.txt", output);
+
+            //var output = Exam1.GetExamQuestionAndAnswers("https://www.examtopics.com/exams/vmware/5v0-61-22/");
+            //File.WriteAllText("output.txt", output);
+
+            var ytOuput = WinuallVids.GetAllYtLinks("https://anilkhannasacademyoflaw.winuall.com/", args[0], args[1]);
+            File.WriteAllLines("output-links.txt", ytOuput);
+
         }
     }
 }

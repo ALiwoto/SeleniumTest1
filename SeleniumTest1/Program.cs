@@ -23,7 +23,9 @@ namespace SeleniumTest1
                     File.WriteAllText("output.txt", output);
                     break;
                 case "1":
-                    var ytOuput = WinuallVids.GetAllYtLinks("https://anilkhannasacademyoflaw.winuall.com/", args[0], args[1]);
+                    var username = Environment.GetEnvironmentVariable("TARGET_USERNAME") ?? args[1];
+                    var password = Environment.GetEnvironmentVariable("TARGET_PASSWORD") ?? args[2];
+                    var ytOuput = WinuallVids.GetAllYtLinks("https://anilkhannasacademyoflaw.winuall.com/", username, password);
                     File.WriteAllLines("output-links.txt", ytOuput);
                     break;
                 default:

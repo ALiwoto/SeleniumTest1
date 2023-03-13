@@ -25,7 +25,7 @@ namespace SeleniumTest1
             var chromeDataPath = AppContext.BaseDirectory + "\\sel-user-data";
 
             chromeOptions.AddArgument("--headless");
-            chromeOptions.AddArgument("--user-data-dir=chromeDataPath");
+            chromeOptions.AddArgument($"--user-data-dir={chromeDataPath}");
 
             _driver = new ChromeDriver(chromeOptions);
 

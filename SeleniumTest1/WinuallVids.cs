@@ -110,13 +110,12 @@ namespace SeleniumTest1
                 _nav.GoToUrl($"{_baseUrl}content");
             }
 
+            IncreaseHeight();
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
                 Thread.Sleep(8000);
             else
                 Thread.Sleep(1000);
 
-            IncreaseHeight();
-            //var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
             var noOfvideoColumn = _driver.FindElements(By.TagName("div"))
                 .Where(el => el.GetAttribute("style").Contains("font-size") &&
                     !string.IsNullOrEmpty(el.Text) && IsVidColumnStr(el.Text))

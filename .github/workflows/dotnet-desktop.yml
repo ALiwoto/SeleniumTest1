@@ -76,8 +76,8 @@ jobs:
 
     - name: Install Google Chrome # Using shell script to install Google Chrome
       run: |
-       chmod +x ./scripts/InstallChrome.sh
-        ./scripts/InstallChrome.sh
+        chmod +x ./ci/InstallChrome.sh
+        ./ci/InstallChrome.sh
     
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     # - name: Restore the application

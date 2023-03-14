@@ -27,9 +27,13 @@ namespace SeleniumTest1
             var chromeOptions = new ChromeOptions();
             var chromeDataPath = AppContext.BaseDirectory + "\\sel-user-data";
 
-            chromeOptions.AddArgument("--headless");
-            chromeOptions.AddArgument("--no-sandbox");
-            chromeOptions.AddArguments("--disable-dev-shm-usage");
+            if (Environment.GetEnvironmentVariable("automated_test") == "true")
+            {
+                chromeOptions.AddArgument("--headless");
+                chromeOptions.AddArgument("--no-sandbox");
+                chromeOptions.AddArguments("--disable-dev-shm-usage");
+
+            }
             chromeOptions.AddArgument($"--user-data-dir={chromeDataPath}");
 
 
@@ -86,6 +90,8 @@ namespace SeleniumTest1
                 DoLogin(username, password);
             }
 
+            Thread.Sleep(5000);
+
             var newContentElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[1]/div"));
             if (newContentElement == null)
             {
@@ -93,6 +99,8 @@ namespace SeleniumTest1
                     "new content button not found");
             }
             newContentElement.Click();
+
+            Thread.Sleep(5000);
 
             var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
             noOfvideoColumn.Click();

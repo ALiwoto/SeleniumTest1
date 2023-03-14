@@ -66,10 +66,6 @@ jobs:
       with:
         dotnet-version: 7.0.x
 
-    # # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    # - name: Setup MSBuild.exe
-    #   uses: microsoft/setup-msbuild@v1.0.2
-
     - name: Modify Dependencies to the desired version
       shell: pwsh
       run: ./ci/ModifyDependencies.ps1
@@ -78,16 +74,10 @@ jobs:
       run: |
         chmod +x ./ci/InstallChrome.sh
         ./ci/InstallChrome.sh
-    
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    # - name: Restore the application
-    #   run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-    #   env:
-    #     Configuration: ${{ matrix.configuration }}
 
-    # Build the solution
     - name: Restore the packages
       run: dotnet restore
+
     # Build the solution
     - name: Execute dotnet build
       run: dotnet build

@@ -46,6 +46,8 @@ namespace SeleniumTest1
                     ChromeDriverService.CreateDefaultService(),
                     chromeOptions,
                     TimeSpan.FromSeconds(360.0));
+                if (Environment.GetEnvironmentVariable("automated_test") == "true")
+                    throw new Exception("ok");
             }
             catch (Exception ex)
             {

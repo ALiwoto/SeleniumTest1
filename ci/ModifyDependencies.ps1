@@ -21,9 +21,12 @@ $packageReferences = $myDocX.Element("Project").Elements("ItemGroup").Elements("
     $_.Attribute("Include").Value -eq "Selenium.WebDriver.ChromeDriver" 
 }
 
+# $targetVersion = "110.0.5481.7700"
+$targetVersion = "111.0.5563.6400"
+
 # change version of chromeDriver package to the one that works.
-if ($chromeDriver.Attribute("Version").Value -ne "110.0.5481.7700") {
-    $chromeDriver.SetAttributeValue("Version", "110.0.5481.7700")
+if ($chromeDriver.Attribute("Version").Value -ne $targetVersion) {
+    $chromeDriver.SetAttributeValue("Version", $targetVersion)
 }
 
 $finalValue = $myDocX.ToString()

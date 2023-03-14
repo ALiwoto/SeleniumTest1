@@ -110,7 +110,10 @@ namespace SeleniumTest1
 
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
                 Thread.Sleep(8000);
+            else
+                Thread.Sleep(4000);
 
+            IncreaseHeight();
             //var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
             var noOfvideoColumn = _driver.FindElements(By.TagName("div"))
                 .Where(el => el.GetAttribute("style").Contains("font-size") &&
@@ -118,6 +121,7 @@ namespace SeleniumTest1
                 .First();
             noOfvideoColumn.Click();
 
+            IncreaseHeight();
             var currentFolders = GetCurrentFolders();
             if (currentFolders == null || currentFolders.Count == 0)
             {
@@ -128,7 +132,7 @@ namespace SeleniumTest1
             for (int i = 0; i < currentFolders.Count; i++)
             {
                 IncreaseHeight();
-                Thread.Sleep(2000);
+                Thread.Sleep(6000);
                 Console.WriteLine($"Detected total tr of {currentFolders.Count}");
 
                 var toBeClicked = _driver?.FindElements(By.TagName("tbody"))
@@ -235,7 +239,7 @@ namespace SeleniumTest1
             Thread.Sleep(1000);
             IncreaseHeight();
 
-            Thread.Sleep(3700);
+            Thread.Sleep(8700);
             return _driver?.FindElements(By.TagName("tbody"))
                     ?.Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
                     ?.FirstOrDefault()
@@ -244,8 +248,8 @@ namespace SeleniumTest1
 
         private void IncreaseHeight()
         {
-            _driver.ExecuteJavaScript("let myElements = document.getElementsByTagName(\"div\"); for (let i = 0; i < myElements.length; i++) { if (myElements[i].getAttribute(\"data-test-id\") == \"virtuoso-scroller\") { myElements[i].setAttribute(\"style\", \"height: 4000000000px; outline: none; overflow-y: auto; position: relative;\"); break; } };");
-            Thread.Sleep(1600);
+            _driver.ExecuteJavaScript("let myElements = document.getElementsByTagName(\"div\"); for (let i = 0; i < myElements.length; i++) { if (myElements[i].getAttribute(\"data-test-id\") == \"virtuoso-scroller\") { myElements[i].setAttribute(\"style\", \"height: 40000000px; outline: none; overflow-y: auto; position: relative;\"); } };");
+            Thread.Sleep(3600);
         }
         //_driver?.FindElements(By.TagName("tbody"))
         //            .Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
@@ -289,9 +293,9 @@ namespace SeleniumTest1
             internal string Title { get; set; }
             internal VideoContainer(string path, string link, string title)
             {
-                if (!path.StartsWith("https://www.youtube.com/watch?v="))
+                if (!link.StartsWith("https://www.youtube.com/watch?v="))
                 {
-                    path = $"https://www.youtube.com/watch?v={path}";
+                    link = $"https://www.youtube.com/watch?v={link}";
                 }
                 Path = path;
                 Link = link;

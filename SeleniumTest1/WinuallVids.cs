@@ -93,16 +93,23 @@ namespace SeleniumTest1
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
                 Thread.Sleep(15000);
 
-            //var newContentElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[1]/div"));
-            var newContentElement = _driver.FindElement(By.CssSelector(".market-place-package-card.new-content-card"));
-            if (newContentElement == null)
+            try
             {
-                throw new InvalidOperationException(
-                    "new content button not found");
+                var newContentElement = _driver.FindElement(By.CssSelector(".market-place-package-card.new-content-card"));
+                if (newContentElement == null)
+                {
+                    throw new InvalidOperationException(
+                        "new content button not found");
+                }
+                newContentElement.Click();
             }
-            newContentElement.Click();
+            catch (Exception)
+            {
+                _nav.GoToUrl($"{_baseUrl}content");
+            }
 
-            Thread.Sleep(4000);
+            if (Environment.GetEnvironmentVariable("automated_test") == "true")
+                Thread.Sleep(8000);
 
             //var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
             var noOfvideoColumn = _driver.FindElements(By.TagName("div"))

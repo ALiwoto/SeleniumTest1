@@ -54,6 +54,11 @@ jobs:
     env:
       Solution_Name: SeleniumTest1
 
+    services:
+      selenium:
+        image: selenium/standalone-chrome
+        options: --shm-size=2gb
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3

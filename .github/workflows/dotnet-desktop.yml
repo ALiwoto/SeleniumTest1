@@ -54,6 +54,9 @@ jobs:
     env:
       Solution_Name: SeleniumTest1
 
+    container:
+      image: node:19
+      
     services:
       selenium:
         image: selenium/standalone-chrome

@@ -12,6 +12,7 @@ using OpenQA.Selenium.Interactions;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager;
 using static System.Net.Mime.MediaTypeNames;
+using System.Net.NetworkInformation;
 
 namespace SeleniumTest1
 {
@@ -112,7 +113,7 @@ namespace SeleniumTest1
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
                 Thread.Sleep(8000);
             else
-                Thread.Sleep(4000);
+                Thread.Sleep(1000);
 
             IncreaseHeight();
             //var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
@@ -133,25 +134,51 @@ namespace SeleniumTest1
             for (int i = 0; i < currentFolders.Count; i++)
             {
                 IncreaseHeight();
-                Thread.Sleep(6000);
+                Thread.Sleep(1000);
                 Console.WriteLine($"Detected total tr of {currentFolders.Count}");
 
-                var toBeClicked = _driver?.FindElements(By.TagName("tbody"))
-                    ?.Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
-                    ?.FirstOrDefault()
-                    ?.FindElements(By.TagName("tr"))[i]
-                    ?.FindElement(By.TagName("td"));
-                if (toBeClicked == null)
-                    continue;
-
+                var toBeClicked = GetToBeClicked(i);
                 var folderName = GetFolderName(toBeClicked!);
-                toBeClicked.Click();
+                toBeClicked?.Click();
 
 
                 CrawlInFolders($"/{folderName}/");
                 _nav.GoToUrl(currentUrl);
             }
 
+        }
+        private IWebElement? GetToBeClicked(int index)
+        {
+            var counter = 0;
+            while (true)
+            {
+                try
+                {
+                    return _driver?.FindElements(By.TagName("tbody"))
+                        ?.Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
+                        ?.FirstOrDefault()
+                        ?.FindElements(By.TagName("tr"))[index]
+                        ?.FindElement(By.TagName("td"));
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Thread.Sleep(1000);
+                    IncreaseHeight();
+
+                    if (counter >= 200)
+                        throw;
+
+                    counter++;
+                    continue;
+                }
+                catch (Exception)
+                {
+                    if (counter >= 25)
+                        throw;
+
+                    counter++;
+                }
+            }
         }
         private List<string> FormatAsLinesOfFile()
         {
@@ -190,14 +217,10 @@ namespace SeleniumTest1
             for (int i = 0; i < currentFolders.Count; i++)
             {
                 IncreaseHeight();
-                
+                Thread.Sleep(4000);
 
                 //var toBeClicked = _driver?.FindElement(By.XPath($"//*[@id=\"root\"]/div[1]/div/div/section/section/main/div/div/div[2]/div[3]/div/div/div/div/div/table/tbody/tr[1]/td[{i + 1}]"));
-                var toBeClicked = _driver?.FindElements(By.TagName("tbody"))
-                    ?.Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
-                    ?.FirstOrDefault()
-                    ?.FindElements(By.TagName("tr"))[i]
-                    ?.FindElement(By.TagName("td"));
+                var toBeClicked = GetToBeClicked(i);
                 var folderName = GetFolderName(toBeClicked!);
                 toBeClicked?.Click();
 
@@ -237,10 +260,10 @@ namespace SeleniumTest1
         //    _driver?.FindElements(By.CssSelector(className));
         private ReadOnlyCollection<IWebElement>? GetCurrentFolders()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
             IncreaseHeight();
 
-            Thread.Sleep(8700);
+            Thread.Sleep(3700);
             return _driver?.FindElements(By.TagName("tbody"))
                     ?.Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
                     ?.FirstOrDefault()
@@ -250,7 +273,7 @@ namespace SeleniumTest1
         private void IncreaseHeight()
         {
             _driver.ExecuteJavaScript("let myElements = document.getElementsByTagName(\"div\"); for (let i = 0; i < myElements.length; i++) { if (myElements[i].getAttribute(\"data-test-id\") == \"virtuoso-scroller\") { myElements[i].setAttribute(\"style\", \"height: 40000000px; outline: none; overflow-y: auto; position: relative;\"); } };");
-            Thread.Sleep(3600);
+            Thread.Sleep(2600);
         }
         //_driver?.FindElements(By.TagName("tbody"))
         //            .Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")

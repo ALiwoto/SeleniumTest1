@@ -50,7 +50,7 @@ jobs:
         #configuration: [Debug, Release]
         configuration: [Debug]
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       Solution_Name: SeleniumTest1
 

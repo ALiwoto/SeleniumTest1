@@ -32,6 +32,7 @@ namespace SeleniumTest1
             {
                 chromeOptions.AddArgument("--headless");
                 chromeOptions.AddArgument("--no-sandbox");
+                chromeOptions.AddArgument("--disable-web-security");
                 chromeOptions.AddArguments("--disable-dev-shm-usage");
 
             }
@@ -293,6 +294,8 @@ namespace SeleniumTest1
             internal string Title { get; set; }
             internal VideoContainer(string path, string link, string title)
             {
+                Console.WriteLine($"Extracted: {link}");
+
                 if (!link.StartsWith("https://www.youtube.com/watch?v="))
                 {
                     link = $"https://www.youtube.com/watch?v={link}";
@@ -300,6 +303,7 @@ namespace SeleniumTest1
                 Path = path;
                 Link = link;
                 Title = title;
+
             }
         }
     }

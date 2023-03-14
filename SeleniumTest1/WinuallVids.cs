@@ -32,9 +32,9 @@ namespace SeleniumTest1
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
             {
                 chromeOptions.AddArgument("--headless");
-                //chromeOptions.AddArgument("--no-sandbox");
+                chromeOptions.AddArgument("--no-sandbox");
                 chromeOptions.AddArgument("--disable-web-security");
-                //chromeOptions.AddArguments("--disable-dev-shm-usage");
+                chromeOptions.AddArguments("--disable-dev-shm-usage");
 
             }
             chromeOptions.AddArgument($"--user-data-dir={chromeDataPath}");
@@ -95,7 +95,7 @@ namespace SeleniumTest1
             }
 
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
-                Thread.Sleep(15000);
+                Thread.Sleep(10000);
 
             try
             {
@@ -118,11 +118,19 @@ namespace SeleniumTest1
             else
                 Thread.Sleep(1000);
 
-            var noOfvideoColumn = _driver.FindElements(By.TagName("div"))
+            try
+            {
+                var noOfvideoColumn = _driver.FindElements(By.TagName("div"))
                 .Where(el => el.GetAttribute("style").Contains("font-size") &&
                     !string.IsNullOrEmpty(el.Text) && IsVidColumnStr(el.Text))
                 .First();
-            noOfvideoColumn.Click();
+                noOfvideoColumn.Click();
+            }
+            catch (Exception)
+            {
+                _nav.GoToUrl($"{_baseUrl}video-library/5f0de7b08046737b5595dbba");
+                Thread.Sleep(25000);
+            }
 
             IncreaseHeight();
             var currentFolders = GetCurrentFolders();

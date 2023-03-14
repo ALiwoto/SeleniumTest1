@@ -11,6 +11,7 @@ using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Interactions;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SeleniumTest1
 {
@@ -56,8 +57,6 @@ namespace SeleniumTest1
             }
             
 
-            
-
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(6000);
 
             _nav = _driver.Navigate();
@@ -73,6 +72,7 @@ namespace SeleniumTest1
             }
             catch (Exception) { ; }
         }
+        
         private void FetchYtLinks(string username, string password)
         {
             _nav.GoToUrl(_baseUrl);
@@ -92,7 +92,8 @@ namespace SeleniumTest1
 
             Thread.Sleep(5000);
 
-            var newContentElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[1]/div"));
+            //var newContentElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[1]/div"));
+            var newContentElement = _driver.FindElement(By.CssSelector(".market-place-package-card.new-content-card"));
             if (newContentElement == null)
             {
                 throw new InvalidOperationException(
@@ -100,9 +101,13 @@ namespace SeleniumTest1
             }
             newContentElement.Click();
 
-            Thread.Sleep(5000);
+            Thread.Sleep(4000);
 
-            var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
+            //var noOfvideoColumn = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div/div[2]/div/div/table/tbody/tr[2]/td[3]/div"));
+            var noOfvideoColumn = _driver.FindElements(By.TagName("div"))
+                .Where(el => el.GetAttribute("style").Contains("font-size") &&
+                    !string.IsNullOrEmpty(el.Text) && IsVidColumnStr(el.Text))
+                .First();
             noOfvideoColumn.Click();
 
             var currentFolders = GetCurrentFolders();
@@ -157,7 +162,7 @@ namespace SeleniumTest1
         }
         private void CrawlInFolders(string currentPath)
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             IncreaseHeight();
             var currentFolders = GetCurrentFolders();
             if (currentFolders == null || currentFolders.Count == 0)
@@ -192,7 +197,8 @@ namespace SeleniumTest1
         private void ExtractVideoLinkFromPage(string path)
         {
             path = path.TrimEnd('/') + ".mkv";
-            var ytIFrame = _driver?.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div[2]/div/div[1]/iframe"));
+            //var ytIFrame = _driver?.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div/div/div[2]/div/div/div[2]/div/div[1]/iframe"));
+            var ytIFrame = _driver?.FindElement(By.TagName("iframe"));
             if (ytIFrame == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -221,7 +227,7 @@ namespace SeleniumTest1
             Thread.Sleep(1000);
             IncreaseHeight();
 
-            Thread.Sleep(4600);
+            Thread.Sleep(3700);
             return _driver?.FindElements(By.TagName("tbody"))
                     ?.Where(el => el.GetAttribute("data-test-id") == "virtuoso-item-list")
                     ?.FirstOrDefault()
@@ -265,7 +271,8 @@ namespace SeleniumTest1
             passwordTextBox?.SendKeys(password);
             passwordSubmitButton?.Click();
         }
-
+        private static bool IsVidColumnStr(string text) =>
+            int.TryParse(text, out var result) && result > 1000;
         private class VideoContainer
         {
             internal string Path { get; set; }

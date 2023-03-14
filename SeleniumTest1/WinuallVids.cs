@@ -8,6 +8,7 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using System.Collections.ObjectModel;
 using OpenQA.Selenium.Support.Extensions;
+using OpenQA.Selenium.Interactions;
 
 namespace SeleniumTest1
 {
@@ -25,9 +26,13 @@ namespace SeleniumTest1
             var chromeDataPath = AppContext.BaseDirectory + "\\sel-user-data";
 
             chromeOptions.AddArgument("--headless");
+            chromeOptions.AddArgument("--no-sandbox");
             chromeOptions.AddArgument($"--user-data-dir={chromeDataPath}");
 
-            _driver = new ChromeDriver(chromeOptions);
+            _driver = new ChromeDriver(
+                ChromeDriverService.CreateDefaultService(), 
+                chromeOptions,
+                TimeSpan.FromSeconds(360.0));
 
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(6000);
 

@@ -54,14 +54,6 @@ jobs:
     env:
       Solution_Name: SeleniumTest1
 
-    container:
-      image: node:19
-      
-    services:
-      selenium:
-        image: selenium/standalone-chrome
-        options: --shm-size=2gb
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -81,6 +73,11 @@ jobs:
     - name: Modify Dependencies to the desired version
       shell: pwsh
       run: ./ci/ModifyDependencies.ps1
+
+    - name: Install Google Chrome # Using shell script to install Google Chrome
+      run: |
+       chmod +x ./scripts/InstallChrome.sh
+        ./scripts/InstallChrome.sh
     
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     # - name: Restore the application

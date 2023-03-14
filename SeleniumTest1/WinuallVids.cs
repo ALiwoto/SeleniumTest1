@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.ObjectModel;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Interactions;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager;
 
 namespace SeleniumTest1
 {
@@ -27,12 +29,30 @@ namespace SeleniumTest1
 
             chromeOptions.AddArgument("--headless");
             chromeOptions.AddArgument("--no-sandbox");
+            chromeOptions.AddArguments("--disable-dev-shm-usage");
             chromeOptions.AddArgument($"--user-data-dir={chromeDataPath}");
 
-            _driver = new ChromeDriver(
-                ChromeDriverService.CreateDefaultService(), 
-                chromeOptions,
-                TimeSpan.FromSeconds(360.0));
+
+            try
+            {
+                _driver = new ChromeDriver(
+                    ChromeDriverService.CreateDefaultService(),
+                    chromeOptions,
+                    TimeSpan.FromSeconds(360.0));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"First try failed: {ex.Message}");
+
+                var chromePath = new DriverManager().SetUpDriver(new ChromeConfig());
+                _driver = new ChromeDriver(
+                    ChromeDriverService.CreateDefaultService(chromePath),
+                    chromeOptions,
+                    TimeSpan.FromSeconds(360.0));
+            }
+            
+
+            
 
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(6000);
 

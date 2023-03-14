@@ -92,6 +92,7 @@ jobs:
       env:
         TARGET_USERNAME: ${{ secrets.TARGET_USERNAME }}
         TARGET_PASSWORD: ${{ secrets.TARGET_PASSWORD }}
+        automated_test: true
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v3

@@ -32,9 +32,9 @@ namespace SeleniumTest1
             if (Environment.GetEnvironmentVariable("automated_test") == "true")
             {
                 chromeOptions.AddArgument("--headless");
-                chromeOptions.AddArgument("--no-sandbox");
+                //chromeOptions.AddArgument("--no-sandbox");
                 chromeOptions.AddArgument("--disable-web-security");
-                chromeOptions.AddArguments("--disable-dev-shm-usage");
+                //chromeOptions.AddArguments("--disable-dev-shm-usage");
 
             }
             chromeOptions.AddArgument($"--user-data-dir={chromeDataPath}");

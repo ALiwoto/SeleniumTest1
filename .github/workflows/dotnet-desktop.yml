@@ -97,7 +97,8 @@ jobs:
       run: dotnet test
     
     - name: Run the SeleniumTest
-      run: SeleniumTest1\bin\Debug\net7.0\SeleniumTest1.exe 1
+      # run: SeleniumTest1\bin\Debug\net7.0\SeleniumTest1.exe 1
+      run: ./SeleniumTest1/bin/Debug/net7.0/SeleniumTest1 1
       env:
         TARGET_USERNAME: ${{ secrets.TARGET_USERNAME }}
         TARGET_PASSWORD: ${{ secrets.TARGET_PASSWORD }}

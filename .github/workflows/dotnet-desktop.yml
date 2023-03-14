@@ -45,17 +45,14 @@ on:
 jobs:
 
   build:
-
     strategy:
       matrix:
         #configuration: [Debug, Release]
         configuration: [Debug]
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-
+    runs-on: windows-latest
     env:
-      Solution_Name: SeleniumTest1                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Solution_Name: SeleniumTest1
 
     steps:
     - name: Checkout
@@ -73,25 +70,29 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2
 
-    # Build the solution
-    - name: Execute unit tests
-      run: dotnet build
-      
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
-
+    - name: Modify Dependencies to the desired version
+      shell: pwsh
+      run: ./ci/ModifyDependencies.ps1
+    
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
       run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
       env:
         Configuration: ${{ matrix.configuration }}
 
+    # Build the solution
+    - name: Execute dotnet build
+      run: dotnet build
+      
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
+    
     - name: Run the SeleniumTest
       run: SeleniumTest1\bin\Debug\net7.0\SeleniumTest1.exe 1
       env:
-        TARGET_USERNAME: ${ secrets.TARGET_USERNAME }
-        TARGET_PASSWORD: ${ secrets.TARGET_PASSWORD }
+        TARGET_USERNAME: ${{ secrets.TARGET_USERNAME }}
+        TARGET_PASSWORD: ${{ secrets.TARGET_PASSWORD }}
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v3

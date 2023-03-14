@@ -22,7 +22,7 @@ $packageReferences = $myDocX.Element("Project").Elements("ItemGroup").Elements("
 }
 
 # $targetVersion = "110.0.5481.7700"
-$targetVersion = "111.0.5563.6400"
+$targetVersion = "110.0.5481.3000"
 
 # change version of chromeDriver package to the one that works.
 if ($chromeDriver.Attribute("Version").Value -ne $targetVersion) {

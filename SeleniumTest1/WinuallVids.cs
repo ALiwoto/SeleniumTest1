@@ -90,7 +90,8 @@ namespace SeleniumTest1
                 DoLogin(username, password);
             }
 
-            Thread.Sleep(5000);
+            if (Environment.GetEnvironmentVariable("automated_test") == "true")
+                Thread.Sleep(15000);
 
             //var newContentElement = _driver.FindElement(By.XPath("/html/body/div[1]/div[1]/div/div/section/section/main/div[2]/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/div/div[1]/div"));
             var newContentElement = _driver.FindElement(By.CssSelector(".market-place-package-card.new-content-card"));

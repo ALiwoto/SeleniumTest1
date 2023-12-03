@@ -18,10 +18,10 @@ namespace SeleniumTest1
 {
     internal class WinuallVids
     {
-        private ChromeDriver _driver;
-        private string _baseUrl;
-        private INavigation _nav;
-        private List<VideoContainer> _videoContainers;
+        private readonly ChromeDriver _driver;
+        private readonly string _baseUrl;
+        private readonly INavigation _nav;
+        private readonly List<VideoContainer> _videoContainers;
 
         private WinuallVids(string baseUrl)
         {
@@ -29,7 +29,7 @@ namespace SeleniumTest1
             var chromeOptions = new ChromeOptions();
             var chromeDataPath = AppContext.BaseDirectory + "\\sel-user-data";
 
-            if (Environment.GetEnvironmentVariable("automated_test") == "true")
+            //if (Environment.GetEnvironmentVariable("automated_test") == "true")
             {
                 chromeOptions.AddArgument("--headless");
                 chromeOptions.AddArgument("--no-sandbox");
@@ -72,7 +72,7 @@ namespace SeleniumTest1
                 _driver?.Dispose();
                 _driver?.Close();
             }
-            catch (Exception) { ; }
+            catch { ; }
         }
         
         private void FetchYtLinks(string username, string password)
@@ -97,12 +97,9 @@ namespace SeleniumTest1
 
             try
             {
-                var newContentElement = _driver.FindElement(By.CssSelector(".market-place-package-card.new-content-card"));
-                if (newContentElement == null)
-                {
-                    throw new InvalidOperationException(
+                var newContentElement = _driver.FindElement(
+                    By.CssSelector(".market-place-package-card.new-content-card")) ?? throw new InvalidOperationException(
                         "new content button not found");
-                }
                 newContentElement.Click();
             }
             catch (Exception)

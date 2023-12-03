@@ -28,6 +28,14 @@ namespace SeleniumTest1
                     var ytOuput = WinuallVids.GetAllYtLinks("https://anilkhannasacademyoflaw.winuall.com/", username, password);
                     File.WriteAllLines("output-links.txt", ytOuput);
                     break;
+                case "2":
+                    var gh = new WinFormsGitHubFind("https://github.com/search?q=repo%3Adotnet%2Fwinforms%20AddRange&type=code");
+                    File.WriteAllText("output-gh", gh.FetchAllOccurances());
+                    break;
+                case "3":
+                    var game2048 = new Selenium2048("https://sui8192.ethoswallet.xyz/");
+                    File.WriteAllLines("game2048Moves", game2048.DoPlay2048()!);
+                    break;
                 default:
                     Console.WriteLine($"Unknown test kind: {args[0]}");
                     PrintHelp();
@@ -44,6 +52,7 @@ namespace SeleniumTest1
             Console.WriteLine("Here are your choices");
             Console.WriteLine("0: examtopics");
             Console.WriteLine("1: winuall");
+            Console.WriteLine("2: 2048 game");
         }
     }
 }
